@@ -1,0 +1,163 @@
+<span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+<div *ngIf="menuOption.seleccionar" >
+  <label for="option">Reporte</label>
+  <select  #mySelect class="form-control" name="option" [(ngModel)]="rpt" (change)="getReporssst(mySelect.value)" > 
+    <option *ngFor="let r of options" [ngValue]="r.optionid">{{r.name}}</option> 
+</select>
+<!-- 
+<input type="button" class="btn btn-primary m-1" value="Buscar" (click)="getActionsByRolid()" > -->
+</div>
+<hr>
+
+<div *ngIf="rpt == 1">
+  <table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">Nombre</th>
+        <th scope="col">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let dato of reportdata">
+        <td scope="row">{{dato.name}}</td>
+        <td scope="row">{{dato.conteo}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div *ngIf="rpt == 2">
+  <table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">Nombre</th>
+        <th scope="col">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let dato of reportdata">
+        <td scope="row">{{dato.name}}</td>
+        <td scope="row">{{dato.cuenta}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<div *ngIf="rpt == 3">
+  <table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">Playlist</th>
+        <th scope="col">nombre</th>
+        <th scope="col">tiempo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let dato of reportdata">
+        <td scope="row">{{dato.playlistid}}</td>
+        <td scope="row">{{dato.name}}</td>
+        <td scope="row">{{dato.tiempo / 60000 | number:'1.0-2'}}</td>
+        
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+
+<div *ngIf="rpt == 4">
+  <table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">nombre</th>
+        <th scope="col">duración</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let dato of reportdata">
+        <td scope="row">{{dato.name}}</td>
+        <td scope="row">{{dato.milliseconds / 60000 | number:'1.0-2'}}</td>
+        
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+
+<div *ngIf="rpt == 5">
+  <table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">Nombre</th>
+        <th scope="col">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let dato of reportdata">
+        <td scope="row">{{dato.name}}</td>
+        <td scope="row">{{dato.conteo}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div *ngIf="rpt == 6">
+  <table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">id</th>
+        <th scope="col">genero</th>
+        <th scope="col">duracion prom.</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let dato of reportdata">
+        <td scope="row">{{dato.genreid}}</td>
+        <td scope="row">{{dato.name}}</td>
+        <td scope="row">{{dato.duracionpromedio / 60000 | number:'1.0-2'}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<div *ngIf="rpt == 7">
+  <table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">id</th>
+        <th scope="col">playlist</th>
+        <th scope="col">artistas</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let dato of reportdata">
+        <td scope="row">{{dato.playlistid}}</td>
+        <td scope="row">{{dato.name}}</td>
+        <td scope="row">{{dato.artistas}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div *ngIf="rpt == 8">
+  <table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">id</th>
+        <th scope="col">nombre</th>
+        <th scope="col">géneros</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let dato of reportdata">
+        <td scope="row">{{dato.artistid}}</td>
+        <td scope="row">{{dato.name}}</td>
+        <td scope="row">{{dato.cuenta}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+

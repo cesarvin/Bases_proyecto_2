@@ -1,0 +1,46 @@
+<span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+<div>
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+        <label for="artistName">Nombre</label>
+        <input type="text" formControlName="artistName" [(ngModel)]="artist.name" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.artistName.errors }" />
+        <div *ngIf="submitted && f.artistName.errors" class="invalid-feedback">
+            <div *ngIf="f.artistName.errors.required">El nombre del artista es requerido</div>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <button [disabled]="loading" class="btn btn-primary">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+          Buscar
+      </button>
+      
+          <input type="button" class="btn btn-primary m-1" value="Agregar" (click)="addArtist()" *ngIf="menuOption.insertar">
+      
+      
+  </div>
+  </form>
+</div>
+<div>
+  <table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">Artista</th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let artist of artists">
+        <td scope="row">{{artist.name}}</td>
+        <td *ngIf="menuOptionAlbum.insertar"><input type="button" value="Agregar Album" class="btn btn-primary btn-sm" (click)="addArtistAlbum(artist)"></td>
+        <td *ngIf="menuOption.actualizar"><input type="button" value="Actualizar" class="btn btn-primary btn-sm" (click)="updateArtist(artist)"></td>
+        <td *ngIf="menuOption.eliminar"><input type="button" value="Eliminar" class="btn btn-primary btn-sm btn-danger" (click)="deleteArtist(artist)"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+

@@ -1,0 +1,26 @@
+<span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+<div class="form-inline" >
+  <select  class="form-control col-10" name="rol" [(ngModel)]="rolid" > 
+    <option *ngFor="let r of rols" [ngValue]="r.rolid">{{r.name}}</option> 
+</select>
+
+<input type="button" class="btn btn-primary m-1" value="Añadir" (click)="addRollAccount()" *ngIf="menuOption.insertar">
+</div>
+<div>
+  <table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">rol</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let rol of rolaccounts">
+        <td scope="row">{{rol.rol}}</td>
+        <td *ngIf="menuOption.eliminar"><input type="button" value="Quitar rol" class="btn btn-primary btn-sm btn-danger" (click)="deleteRowAccount(rol)"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+

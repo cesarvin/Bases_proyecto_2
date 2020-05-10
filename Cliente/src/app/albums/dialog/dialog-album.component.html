@@ -1,0 +1,20 @@
+<h2>Album</h2>
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label >Artista: {{album.artistname}}</label>
+  </div>
+  <div class="form-group">
+    <label for="albumName">Nombre del album</label>
+    <input type="text" formControlName="albumName" [(ngModel)]="album.name" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.albumName.errors }" />
+    <div *ngIf="submitted && f.albumName.errors" class="invalid-feedback">
+        <div *ngIf="f.albumName.errors.required">El nombre del album es requerido</div>
+    </div>
+  </div>
+  <div class="form-group">
+    <button [disabled]="loading" class="btn btn-primary">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+        Guardar
+    </button>
+    <a routerLink="/albums" class="btn btn-link">Cancelar</a>
+  </div>
+</form>

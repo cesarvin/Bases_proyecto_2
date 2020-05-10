@@ -1,0 +1,30 @@
+<span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+
+<div>
+  <table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col"></th>
+        <th scope="col">Nombres</th>
+        <th scope="col">Apellidos</th>
+        <th scope="col">Empleado</th>
+        <th scope="col">Usuario</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let account of accounts">
+        <td scope="row">{{account.accountid}}</td>
+        <td scope="row">{{account.firstname}}</td>
+        <td scope="row">{{account.lastname}}</td>
+        <td scope="row">{{account.isemployee}}</td>
+        <td scope="row">{{account.accountuser}}</td>
+        <td *ngIf="menuOptionRolAccount.insertar"><input type="button" value="Roles" class="btn btn-primary btn-sm" (click)="addRolAccount(account)"></td>
+        <!-- <td *ngIf="menuOption.actualizar"><input type="button" value="Actualizar" class="btn btn-primary btn-sm" (click)="updateArtist(artist)"></td>
+        <td *ngIf="menuOption.eliminar"><input type="button" value="Eliminar" class="btn btn-primary btn-sm btn-danger" (click)="deleteArtist(artist)"></td> -->
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+

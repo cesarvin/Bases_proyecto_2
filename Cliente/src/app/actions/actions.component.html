@@ -1,0 +1,58 @@
+<span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+<div class="form-inline" *ngIf="menuOptionRol.seleccionar" >
+  <label for="rol">Buscar para el rol</label>
+  <select  class="form-control col-10" name="rol" [(ngModel)]="rolid" > 
+    <option *ngFor="let r of rols" [ngValue]="r.rolid">{{r.name}}</option> 
+</select>
+
+<input type="button" class="btn btn-primary m-1" value="Buscar" (click)="getActionsByRolid()" >
+</div>
+<hr>
+<div *ngIf="menuOptionRolOption.insertar">
+  <label for="rol">Agregar accion</label>
+  
+  <div class="m-1">
+    <select  class="form-control" name="rol" [(ngModel)]="action.rolid" > 
+      <option *ngFor="let r of rols" [ngValue]="r.rolid">{{r.name}}</option> 
+  </select>
+  </div>
+  <div class="m-1" >
+    <select  class="form-control" name="rol" [(ngModel)]="action.optionid" > 
+      <option *ngFor="let r of options" [ngValue]="r.optionid">{{r.name}}</option> 
+  </select>
+  </div>
+  <div class="m-1" >
+    <select  class="form-control" name="rol" [(ngModel)]="action.actionid" > 
+      <option *ngFor="let r of actiontypes" [ngValue]="r.actionid">{{r.name}}</option> 
+  </select>
+  </div>
+
+  <input type="button" class="btn btn-primary m-1" value="Agregar acción" (click)="setRolOption()" >
+</div>
+
+<hr>
+<span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+
+<div>
+  <table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">Rol</th>
+        <th scope="col">Opción</th>
+        <th scope="col">Acción</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let action of actions">
+        <td scope="row">{{action.rol}}</td>
+        <td scope="row">{{action.option}}</td>
+        <td scope="row">{{action.accion}}</td>
+        <td *ngIf="menuOption.eliminar"><input type="button" value="Eliminar" class="btn btn-primary btn-sm btn-danger" (click)="deleteAction(action)"></td> 
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+

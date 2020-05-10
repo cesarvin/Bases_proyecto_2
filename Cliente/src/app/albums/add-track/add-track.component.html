@@ -1,0 +1,64 @@
+<span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label >Artista: {{artist.name}}</label>
+  </div>
+  <div class="form-group">
+    <label >Album: {{album.title}}</label>
+  </div>
+  <div class="form-group">
+    <label for="name">Nombre</label>
+    <input type="text" formControlName="name" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.name.errors }" />
+    <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+        <div *ngIf="f.name.errors.required">Nombre es requerido</div>
+    </div>
+  </div>
+  <div class="form-group">
+    
+  </div>
+  <div class="form-group">
+    <label for="composer">Autor</label>
+    <input type="text" formControlName="composer" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.composer.errors }" />
+    <div *ngIf="submitted && f.composer.errors" class="invalid-feedback">
+        <div *ngIf="f.composer.errors.required">Apellido es requerido</div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="milliseconds">Duración en milliseconds</label>
+    <input type="number" max="2147483646" formControlName="milliseconds" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.milliseconds.errors }" />
+    <div *ngIf="submitted && f.milliseconds.errors" class="invalid-feedback">
+        <div *ngIf="f.milliseconds.errors.required">Duración es requerido</div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="unitprice">Precio</label>
+    <input type="number" formControlName="unitprice" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.unitprice.errors }" />
+    <div *ngIf="submitted && f.unitprice.errors" class="invalid-feedback">
+        <div *ngIf="f.unitprice.errors.required">Precio es requerido</div>
+    </div>
+  </div>
+  <div class="form-group">
+    
+  </div>
+</form>
+<label >Tipo</label>
+<div >
+      <select class="form-control" name="mediaType" [(ngModel)]="newtrack" > 
+        <option *ngFor="let mt of mediaTypes" [ngValue]="mt.value">{{mt.name}}</option> 
+    </select>
+    </div>
+    <label >Genero</label>
+      
+    <div >
+      <select class="form-control" name="genre" [(ngModel)]="genreid" > 
+        <option *ngFor="let g of genres" [ngValue]="g.value">{{g.name}}</option> 
+    </select>
+    </div>
+<div class="mt-3">
+  <button [disabled]="loading" class="btn btn-primary"(click)="onSubmit()">
+    <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+    Guardar
+</button>
+<a [routerLink]="['/albumtracks',album.albumid]" class="btn btn-link">Cancel</a>
+</div>
+    
