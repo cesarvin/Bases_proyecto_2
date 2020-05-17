@@ -15986,3 +15986,63 @@ INSERT INTO rolaccount (rolid,accountid)
 SELECT 2, A.AccountId
 FROM customer C 
 	INNER JOIN Account  A ON (C.Email = A.AccountUser);
+
+--tabla para registrar la bitacora
+DROP TABLE IF EXISTS Audit;
+CREATE TABLE Audit(
+    Operation 	      char(1)   NOT NULL,
+    RowValue		  TEXT      NOT NULL,
+    Stamp             timestamp NOT NULL,
+    AccountId         INTEGER   NOT NULL, 
+    TableName		  TEXT 	    NOT NULL
+);
+
+--funcion que sirve para el trigger de bitacora
+CREATE OR REPLACE FUNCTION  fnTriggerAudit()
+RETURNS TRIGGER AS
+$BODY$
+DECLARE 
+	operation TEXT;
+BEGIN 
+	
+	IF TG_OP  = 'INSERT' THEN
+		INSERT INTO audit SELECT 'I', ROW_TO_JSON(NEW.*), now(), 1, TG_TABLE_NAME::regclass::TEXT;  		
+		RETURN NEW;
+	ELSEIF TG_OP  = 'UPDATE' THEN
+		SELECT ARRAY_TO_JSON(ARRAY_AGG(ROW)) INTO operation
+		FROM (
+		   SELECT NEW.* 
+		   UNION 
+		   SELECT OLD.* 
+		) ROW;
+		INSERT INTO audit SELECT 'U', operation, now(), 1, TG_TABLE_NAME::regclass::TEXT;
+		RETURN NEW;
+	ELSEIF TG_OP  = 'DELETE' THEN		
+		INSERT INTO audit SELECT 'D', ROW_TO_JSON(OLD.*), now(), 1, TG_TABLE_NAME::regclass::TEXT;
+		RETURN OLD;
+	END IF; 
+	RETURN NULL;
+
+END
+$BODY$
+LANGUAGE 'plpgsql';
+
+--se agrega la bitacora a Artistas
+CREATE TRIGGER ArtistAudit
+AFTER INSERT OR UPDATE OR DELETE ON Artist
+    FOR EACH ROW EXECUTE PROCEDURE fnTriggerAudit();
+
+--se agrega la bitacora a Album   
+CREATE TRIGGER AlbumAudit
+AFTER INSERT OR UPDATE OR DELETE ON Album
+    FOR EACH ROW EXECUTE PROCEDURE fnTriggerAudit();
+
+--se agrega la bitacora a Track
+CREATE TRIGGER TrackAudit
+AFTER INSERT OR UPDATE OR DELETE ON Track
+    FOR EACH ROW EXECUTE PROCEDURE fnTriggerAudit();
+
+--se agrega la bitacora a Playlist
+CREATE TRIGGER PlaylistAudit
+AFTER INSERT OR UPDATE OR DELETE ON Playlist
+    FOR EACH ROW EXECUTE PROCEDURE fnTriggerAudit();
