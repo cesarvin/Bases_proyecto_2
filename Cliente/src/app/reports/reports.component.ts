@@ -5,6 +5,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { UserService } from '@/_services';
 
+
+import { AppService } from '@/app.service';
+
 @Component({ templateUrl: 'reports.component.html' })
 export class ReportsComponent implements OnInit {
 
@@ -34,10 +37,25 @@ export class ReportsComponent implements OnInit {
   ]
 
 
+  protected rptOptions = { 
+    fieldSeparator: ',',
+    quoteStrings: '"',
+    decimalSeparator: '.',
+    showLabels: true, 
+    showTitle: true,
+    title: 'My Awesome CSV',
+    useTextFile: false,
+    useBom: true,
+    useKeysAsHeaders: true,
+    // headers: ['Column 1', 'Column 2', etc...] <-- Won't work with useKeysAsHeaders present!
+  };
+
+
   constructor(
     private formBuilder: FormBuilder,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private appService:AppService
   ) {
     this.menuOption = JSON.parse(localStorage.getItem('menu')).filter(op => op.name == 'Reports')[0];
     }
@@ -72,6 +90,37 @@ export class ReportsComponent implements OnInit {
                 error => {
                     this.loading = false;
                 });
+    }
+
+    exportReport(data, rpt){
+      
+      switch (rpt){
+        case 1:
+          this.appService.downloadFile(data, 'reporte', ['name','conteo']);
+          break;
+        case 2:
+          this.appService.downloadFile(data, 'reporte', ['name','cuenta']);
+          break;
+        case 3:
+          this.appService.downloadFile(data, 'reporte', ['playlistid','name','tiempo']);
+          break;
+        case 4:
+          this.appService.downloadFile(data, 'reporte', ['name','milliseconds']);
+          break;
+        case 5:
+          this.appService.downloadFile(data, 'reporte', ['name','conteo']);
+          break;
+        case 6:
+          this.appService.downloadFile(data, 'reporte', ['genreid','name','duracionpromedio']);
+          break;
+        case 7:
+          this.appService.downloadFile(data, 'reporte', ['playlistid','name','artistas']);
+          break;
+        case 8:
+          this.appService.downloadFile(data, 'reporte', ['artistid','name','cuenta']);
+          break;
+      }
+      
     }
 
     

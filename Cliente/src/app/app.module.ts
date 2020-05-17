@@ -27,6 +27,8 @@ import { LoginComponent } from './login';
 import { RegisterComponent } from './register';
 import { AlertComponent } from './_components';
 
+import { AppService } from './app.service';
+
 @NgModule({
     imports: [
         BrowserModule,
@@ -34,7 +36,7 @@ import { AlertComponent } from './_components';
         HttpClientModule,
         appRoutingModule,
         BrowserAnimationsModule,
-        FormsModule
+        FormsModule,
         // MatDialogModule, 
         // MatButtonModule
     ],
@@ -60,9 +62,9 @@ import { AlertComponent } from './_components';
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-
+        AppService
         // provider used to create fake backend
-        //fakeBackendProvider
+        //fakeBackendProvider 
     ],
     bootstrap: [AppComponent]
 })

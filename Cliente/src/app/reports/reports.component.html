@@ -13,6 +13,14 @@
   <table class="table">
     <thead class="thead-light">
       <tr>
+        <th colspan="2">
+          <button [disabled]="loading" class="btn btn-primary" (click)="exportReport(reportdata,rpt)">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+            Exportar Reporte
+          </button>
+        </th>
+      </tr>
+      <tr>
         <th scope="col">Nombre</th>
         <th scope="col">Total</th>
       </tr>
@@ -29,6 +37,14 @@
 <div *ngIf="rpt == 2">
   <table class="table">
     <thead class="thead-light">
+      <tr>
+        <th colspan="2">
+          <button [disabled]="loading" class="btn btn-primary" (click)="exportReport(reportdata,rpt)">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+            Exportar Reporte
+          </button>
+        </th>
+      </tr>
       <tr>
         <th scope="col">Nombre</th>
         <th scope="col">Total</th>
@@ -47,6 +63,14 @@
 <div *ngIf="rpt == 3">
   <table class="table">
     <thead class="thead-light">
+      <tr>
+        <th colspan="3">
+          <button [disabled]="loading" class="btn btn-primary" (click)="exportReport(reportdata,rpt)">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+            Exportar Reporte
+          </button>
+        </th>
+      </tr>
       <tr>
         <th scope="col">Playlist</th>
         <th scope="col">nombre</th>
@@ -70,6 +94,14 @@
   <table class="table">
     <thead class="thead-light">
       <tr>
+        <th colspan="2">
+          <button [disabled]="loading" class="btn btn-primary" (click)="exportReport(reportdata,rpt)">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+            Exportar Reporte
+          </button>
+        </th>
+      </tr>
+      <tr>
         <th scope="col">nombre</th>
         <th scope="col">duración</th>
       </tr>
@@ -90,6 +122,14 @@
   <table class="table">
     <thead class="thead-light">
       <tr>
+        <th colspan="2">
+          <button [disabled]="loading" class="btn btn-primary" (click)="exportReport(reportdata,rpt)">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+            Exportar Reporte
+          </button>
+        </th>
+      </tr>
+      <tr>
         <th scope="col">Nombre</th>
         <th scope="col">Total</th>
       </tr>
@@ -106,6 +146,14 @@
 <div *ngIf="rpt == 6">
   <table class="table">
     <thead class="thead-light">
+      <tr>
+        <th colspan="3">
+          <button [disabled]="loading" class="btn btn-primary" (click)="exportReport(reportdata,rpt)">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+            Exportar Reporte
+          </button>
+        </th>
+      </tr>
       <tr>
         <th scope="col">id</th>
         <th scope="col">genero</th>
@@ -127,6 +175,14 @@
   <table class="table">
     <thead class="thead-light">
       <tr>
+        <th colspan="3">
+          <button [disabled]="loading" class="btn btn-primary" (click)="exportReport(reportdata,rpt)">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+            Exportar Reporte
+          </button>
+        </th>
+      </tr>
+      <tr>
         <th scope="col">id</th>
         <th scope="col">playlist</th>
         <th scope="col">artistas</th>
@@ -145,6 +201,14 @@
 <div *ngIf="rpt == 8">
   <table class="table">
     <thead class="thead-light">
+      <tr>
+        <th colspan="3">
+          <button [disabled]="loading" class="btn btn-primary" (click)="exportReport(reportdata,rpt)">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+            Exportar Reporte
+          </button>
+        </th>
+      </tr>
       <tr>
         <th scope="col">id</th>
         <th scope="col">nombre</th>
