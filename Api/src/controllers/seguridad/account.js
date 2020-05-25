@@ -14,7 +14,8 @@ const getLogin = async (req, res) => {
     //console.log(login);
     if (login.rowCount != 0 && login.rows[0].login == 1){
       menu.login = 1;
-      var accountid =  login.rows[0].accountid
+      menu.accountid = login.rows[0].accountid;
+      var accountid =  login.rows[0].accountid;
       const getMenu = await pool.query('SELECT  O.*,   \
                                               (CASE WHEN EXISTS (   \
                                                 SELECT ra.rolid, ro.optionid, ac.name    \

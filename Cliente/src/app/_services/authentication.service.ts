@@ -25,6 +25,7 @@ export class AuthenticationService {
               console.log('login->', login);  
               if (login.login == 1){
                 localStorage.setItem('currentUser', login.login);
+                localStorage.setItem('accountid', login.accountid);
                 localStorage.setItem('menu', JSON.stringify(login.menu));
               }else {
 
@@ -38,6 +39,7 @@ export class AuthenticationService {
     logout() {
         // remove user from local storage and set current user to null
         localStorage.removeItem('currentUser');
+        localStorage.removeItem('accountid');
         this.currentUserSubject.next(null);
     }
 }
