@@ -12,6 +12,7 @@ import { AccountsComponent } from './cuentas';
 import { RolAccountComponent } from './cuentas/rol-account/rol-cuenta.component';
 import { ActionsComponent } from './actions';
 import { ReportsComponent } from './reports';
+import { CartComponent } from './cart';
 import { LoginComponent } from './login';
 import { RegisterComponent } from './register';
 import { AuthGuard } from './_helpers';
@@ -31,6 +32,7 @@ const routes: Routes = [
     { path: 'rolaccount/:id', component: RolAccountComponent, canActivate: [AuthGuard] },
     { path: 'actions', component: ActionsComponent, canActivate: [AuthGuard] },
     { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard] },
+    { path: 'shopcart', component: CartComponent, canActivate: [AuthGuard] },
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
 

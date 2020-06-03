@@ -6,9 +6,12 @@ import { map } from 'rxjs/operators';
 //import { User } from '@/_models';
 
 
+
 @Injectable({ providedIn: 'root' })
 export class ArtistService {
     constructor(private http: HttpClient) { }
+  
+  accountid = localStorage.getItem('accountid');
 
   getArtists() {
     return this.http.get<any>('http://localhost:3000/artist');
@@ -31,7 +34,7 @@ export class ArtistService {
   }
 
   saveArtist(artist) {
-    return this.http.post('http://localhost:3000/artist', artist);
+    return this.http.post('http://localhost:3000/artist', {...artist, accountid: this.accountid});
   }
 
 }

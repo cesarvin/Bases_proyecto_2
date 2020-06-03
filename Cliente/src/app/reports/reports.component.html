@@ -225,3 +225,32 @@
   </table>
 </div>
 
+
+<div *ngIf="rpt == 9">
+  <table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th colspan="3">
+          <button [disabled]="loading" class="btn btn-primary" (click)="exportReport(reportdata,rpt)">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+            Exportar Reporte
+          </button>
+        </th>
+      </tr>
+      <tr>
+        <th scope="col">operación</th>
+        <th scope="col">fecha</th>
+        <th scope="col">usuario</th>
+        <th scope="col">tabla</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let dato of reportdata">
+        <td scope="row">{{dato.operation}}</td>
+        <td scope="row">{{dato.stamp  | date: 'dd/MM/yyyy'}}</td>
+        <td scope="row">{{dato.accountuser}}</td>
+        <td scope="row">{{dato.tabla}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

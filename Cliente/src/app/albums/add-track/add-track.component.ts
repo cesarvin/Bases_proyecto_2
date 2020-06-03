@@ -99,6 +99,7 @@ export class DialogAddTracksComponent implements OnInit {
                 // this.album.title = data[0].title; 
                 // this.album.artist = data[0].artist;
                 this.loading = false;
+                console.log('this.tracks', this.tracks);
               },
               error => {
                   this.loading = false;

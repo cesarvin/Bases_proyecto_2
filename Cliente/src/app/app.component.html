@@ -1,13 +1,15 @@
 ﻿<!-- nav -->
-<!--<nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="currentUser">-->
-<nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="menuexist">
+<nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="currentUser">
+<!-- <nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="menuexist"> -->
     <div class="navbar-nav">
+        <a class="nav-item nav-link" routerLink="/">Home</a>
         <a class="nav-item nav-link" routerLink="/artists">Artistas</a>
         <a class="nav-item nav-link" routerLink="/albums">Albums</a>
         <!-- <a class="nav-item nav-link" routerLink="/">Canciones</a> -->
         <a class="nav-item nav-link" routerLink="/account">Cuentas</a>
         <a class="nav-item nav-link" routerLink="/actions">Acciones</a>
         <a class="nav-item nav-link" routerLink="/reports">Reportes</a>
+        <a class="nav-item nav-link" routerLink="/shopcart">Carrito</a>
         <a class="nav-item nav-link" (click)="logout()">Salir</a>
     </div>
 </nav>

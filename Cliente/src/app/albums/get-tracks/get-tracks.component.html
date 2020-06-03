@@ -30,7 +30,9 @@
         <td scope="row">{{track.genre}}</td>
         <td scope="row">{{track.composer}}</td>
         <td scope="row">{{track.duration / 60000 | number:'1.0-2'}}min</td>
-        <td *ngIf="menuOptionTrack.eliminar"><input type="button" value="Eliminar" class="btn btn-primary btn-sm btn-danger" (click)="deleteTrack(track)"></td>
+        <td *ngIf="menuOptionTrack.eliminar"><button type="button" class="btn btn-primary btn-sm btn-danger" (click)="deleteTrack(track)"><i class="fa fa-trash"></i></button></td>
+        <td *ngIf="track.play"><button type="button" class="btn btn-primary btn-sm btn-success" (click)="play(track)"><i class="fa fa-play"></i></button></td>
+        <td *ngIf="!track.cart && !track.play"><button type="button"  class="btn btn-primary btn-sm" (click)="addCart(track)"><i class="fa fa-shopping-cart"></i></button></td>
       </tr>
     </tbody>
   </table>

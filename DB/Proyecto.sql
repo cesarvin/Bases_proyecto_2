@@ -15947,6 +15947,8 @@ INSERT INTO option (name,isMenu) VALUES ('Customer', 1);
 INSERT INTO option (name,isMenu) VALUES ('Action', 0);
 INSERT INTO option (name,isMenu) VALUES ('RolOption', 0);
 INSERT INTO option (name,isMenu) VALUES ('RolAccount', 0);
+INSERT INTO option (name,isMenu) VALUES ('ShopCart', 1);
+
 
 INSERT INTO Rol (name) VALUES ('Administrador');
 INSERT INTO Rol (name) VALUES ('Usuario');
@@ -15959,6 +15961,14 @@ FROM rol r, "option" o, "action" a
 WHERE r."name" <>'Administrador'
 AND o.name  IN ('Artists','Albums','Tracks')
 AND a."name" IN ('Seleccionar')
+ORDER BY r.rolid, o.optionid, actionid ;
+
+INSERT INTO roloption (rolid, optionid, actionid)
+SELECT r.rolid, o.optionid, actionid 
+FROM rol r, "option" o, "action" a 
+WHERE r."name" <>'Administrador'
+AND o.name  IN ('ShopCart')
+AND a."name" IN ('Seleccionar', 'Insertar', 'Actualizar', 'Eliminar')
 ORDER BY r.rolid, o.optionid, actionid ;
 
 --administrador 
@@ -15974,7 +15984,7 @@ INSERT INTO roloption (rolid, optionid, actionid)
 SELECT r.rolid, o.optionid, actionid 
 FROM rol r, "option" o, "action" a 
 WHERE r."name" = 'Administrador'
-AND o.name  IN ('Artists','Albums','Tracks', 'Rol', 'Option', 'Account', 'Employee', 'Customer', 'Action', 'RolOption', 'InactiveTracks', 'RolAccount')
+AND o.name  IN ('Artists','Albums','Tracks', 'Rol', 'Option', 'Account', 'Employee', 'Customer', 'Action', 'RolOption', 'InactiveTracks', 'RolAccount', 'ShopCart')
 AND a."name" IN ('Seleccionar', 'Insertar', 'Actualizar', 'Eliminar')
 ORDER BY r.rolid, o.optionid, actionid ;
 
@@ -16006,7 +16016,7 @@ DECLARE
 BEGIN 
 	
 	IF TG_OP  = 'INSERT' THEN
-		INSERT INTO audit SELECT 'I', ROW_TO_JSON(NEW.*), now(), 1, TG_TABLE_NAME::regclass::TEXT;  		
+		INSERT INTO audit SELECT 'I', ROW_TO_JSON(NEW.*), now(), NEW.insAccountId, TG_TABLE_NAME::regclass::TEXT;  		
 		RETURN NEW;
 	ELSEIF TG_OP  = 'UPDATE' THEN
 		SELECT ARRAY_TO_JSON(ARRAY_AGG(ROW)) INTO operation
@@ -16015,7 +16025,7 @@ BEGIN
 		   UNION 
 		   SELECT OLD.* 
 		) ROW;
-		INSERT INTO audit SELECT 'U', operation, now(), 1, TG_TABLE_NAME::regclass::TEXT;
+		INSERT INTO audit SELECT 'U', operation, now(), NEW.updAccountId, TG_TABLE_NAME::regclass::TEXT;
 		RETURN NEW;
 	ELSEIF TG_OP  = 'DELETE' THEN		
 		INSERT INTO audit SELECT 'D', ROW_TO_JSON(OLD.*), now(), 1, TG_TABLE_NAME::regclass::TEXT;
@@ -16046,3 +16056,110 @@ AFTER INSERT OR UPDATE OR DELETE ON Track
 CREATE TRIGGER PlaylistAudit
 AFTER INSERT OR UPDATE OR DELETE ON Playlist
     FOR EACH ROW EXECUTE PROCEDURE fnTriggerAudit();
+
+
+--campos para auditoria
+ALTER TABLE Artist ADD COLUMN insAccountId INT DEFAULT(1); 
+ALTER TABLE Artist ADD COLUMN updAccountId INT NULL;
+
+ALTER TABLE Album ADD COLUMN insAccountId INT DEFAULT(1); 
+ALTER TABLE Album ADD COLUMN updAccountId INT NULL;
+
+ALTER TABLE Track ADD COLUMN insAccountId INT DEFAULT(1); 
+ALTER TABLE Track ADD COLUMN updAccountId INT NULL;
+ALTER TABLE Track ADD COLUMN url VARCHAR(100) DEFAULT('https://www.youtube.com/watch?v=uuqwy8Z7qqQ');
+
+ALTER TABLE Playlist ADD COLUMN insAccountId INT DEFAULT(1); 
+ALTER TABLE Playlist ADD COLUMN updAccountId INT NULL;
+
+DROP TABLE IF EXISTS ShopCart;
+CREATE TABLE ShopCart(
+	accountid INT NOT NULL REFERENCES Account ON DELETE CASCADE ON UPDATE CASCADE,
+	trackid INT NOT NULL REFERENCES Track ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT PK_ShopCart PRIMARY KEY (accountid, trackid),
+	FOREIGN KEY (accountid) REFERENCES Account (AccountId),
+	FOREIGN KEY (trackid) REFERENCES Track (TrackId)
+);
+
+--vista que retorna las canciones por album
+CREATE VIEW TrackByAlbum
+AS 
+SELECT a.albumid, ar.name AS artist, a.title AS title,t.trackid, t.name, g.name AS genre, t.composer, t.milliseconds AS duration, t.url, t.unitprice  
+FROM album a   
+	INNER JOIN artist ar ON (a.artistid = ar.artistid )  
+    INNER JOIN track t ON (a.albumid  = t.albumid)  
+    INNER JOIN genre g ON (t.genreid = g.genreid ) 
+--WHERE a.albumid =1  
+ORDER BY trackid;
+
+--canciones compradas por usuario
+CREATE VIEW BuyedTracks
+AS
+SELECT a.accountid, il.trackid 
+FROM invoice i
+ INNER JOIN invoiceline il ON (i.invoiceid = il.invoiceid)
+ INNER JOIN customer c ON (i.customerid = c.customerid)
+ INNER JOIN account a ON (c.accountid  = a.accountid );
+--WHERE a.accountid = 12
+ 
+--canciones y el usuario que las ingreso 
+CREATE VIEW TrackByUserInsert
+AS
+SELECT t.trackid, t.insaccountid
+FROM track t;
+
+DROP TABLE IF EXISTS TrackPlayed; 
+CREATE TABLE TrackPlayed (
+    AccountId INT NOT NULL REFERENCES Account ON DELETE CASCADE ON UPDATE CASCADE,
+	TrackId INT NOT NULL REFERENCES Track ON DELETE CASCADE ON UPDATE CASCADE,
+    DatePlayed TIMESTAMP DEFAULT NOW(),
+	FOREIGN KEY (accountid) REFERENCES Account (AccountId),
+	FOREIGN KEY (trackid) REFERENCES Track (TrackId)
+);
+
+--vista con el total de los carritos de compra
+CREATE VIEW shopTotal
+AS 
+SELECT sc.accountid, c.customerid, sum(unitprice) AS total 
+FROM ShopCart sc 
+	INNER JOIN TrackByAlbum tba ON (sc.trackid = tba.trackid)  
+	INNER JOIN customer c ON (sc.accountid = c.accountid)
+--	WHERE sc.accountid = 12	
+GROUP BY sc.accountid, c.customerid;
+
+
+CREATE OR REPLACE FUNCTION Sold(vaccountid INT)
+RETURNS BOOLEAN AS $$
+DECLARE 
+	passed BOOLEAN;
+	vcustomerid INT; 
+	vtotal NUMERIC(10,2);
+	vinvoiceid INT;
+BEGIN
+        --SELECT FALSE INTO passed;
+		SELECT customerid INTO vcustomerid 
+		FROM shopTotal
+		WHERE accountid = vaccountid;
+		
+		SELECT total INTO vtotal
+		FROM shopTotal
+		WHERE accountid = vaccountid;
+        
+		INSERT INTO invoice (customerid, invoicedate, total) VALUES (vcustomerid, NOW(), Vtotal);
+		
+		SELECT MAX(invoiceid) INTO vinvoiceid
+		FROM invoice i;
+	
+		INSERT INTO invoiceline (invoiceid, trackid, unitprice, quantity)
+		SELECT vinvoiceid AS invoiceid, tba.trackid AS trackid, unitprice AS unitprice, 1 AS quantity
+	    FROM ShopCart sc 
+	    	INNER JOIN TrackByAlbum tba ON (sc.trackid = tba.trackid)  
+	    WHERE accountid = vaccountid;
+		
+	   	DELETE FROM shopcart WHERE accountid = vaccountid;
+	   
+	   	SELECT TRUE INTO passed;
+	   	
+		RETURN passed;
+END;
+$$  LANGUAGE plpgsql

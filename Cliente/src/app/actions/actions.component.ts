@@ -31,7 +31,8 @@ export class ActionsComponent implements OnInit {
     {optionid:10, name:'Customer'},
     {optionid:11, name:'Action'},
     {optionid:12, name:'RolOption'},
-    {optionid:13, name:'RolAccount'}
+    {optionid:13, name:'RolAccount'},
+    {optionid:14, name:'ShopCart'}
   ]
 
   actiontypes = [

@@ -2,10 +2,10 @@
 //agrega una Track o actualiza si existe, y retorna la tupla cuando agrega.
 const setTrack = async (req, res) => {
   try{
-    const {name, composer, milliseconds, unitprice, mediatype, albumid, genreid} = req.body; 
+    const {name, composer, milliseconds, unitprice, mediatype, albumid, genreid, accountid} = req.body; 
 
     
-    const insert = await pool.query('INSERT INTO Track (name, composer , milliseconds , unitprice , mediatypeid , albumid, genreid) VALUES ($1, $2, $3, $4, $5, $6, $7)', [name, composer, milliseconds, unitprice, mediatype, albumid, genreid] );
+    const insert = await pool.query('INSERT INTO Track (name, composer , milliseconds , unitprice , mediatypeid , albumid, genreid, insAccountId) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [name, composer, milliseconds, unitprice, mediatype, albumid, genreid, accountid] );
     
     res.json('OK');
     

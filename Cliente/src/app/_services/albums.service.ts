@@ -10,6 +10,8 @@ import { map } from 'rxjs/operators';
 export class AlbumService {
     constructor(private http: HttpClient) { }
 
+  accountid = localStorage.getItem('accountid');
+
   getAlbums() {
     return this.http.get<any>('http://localhost:3000/album');
   }
@@ -27,11 +29,11 @@ export class AlbumService {
   }
 
   saveAlbum(album) {
-    return this.http.post('http://localhost:3000/album', album);
+    return this.http.post('http://localhost:3000/album', {...album, accountid:this.accountid});
   }
 
   getAlbumTracks(id){
-    return this.http.get<any>(`http://localhost:3000/albumtracks/${id}`);
+    return this.http.get<any>(`http://localhost:3000/albumtracks/${id}/${this.accountid}`);
   }
 
   deleteAlbumTrack(id){
@@ -39,7 +41,22 @@ export class AlbumService {
   }
   
   saveTrack(track) {
-    return this.http.post('http://localhost:3000/track', track);
+    return this.http.post('http://localhost:3000/track', {...track, accountid:this.accountid});
   }
 
+  playSong(trackid) {
+    return this.http.post('http://localhost:3000/play', {trackid:trackid, accountid:this.accountid});
+  }
+
+  addCart(trackid) {
+    return this.http.post('http://localhost:3000/addcart', {trackid:trackid, accountid:this.accountid});
+  }
+
+  getShopCart(){
+    return this.http.get<any>(`http://localhost:3000/shopcart/${this.accountid}`);
+  }
+
+  getSoldCart(){
+    return this.http.get<any>(`http://localhost:3000/sold/${this.accountid}`);
+  }
 }

@@ -8,6 +8,9 @@ import { UserService } from '@/_services';
 
 import { AppService } from '@/app.service';
 
+
+import * as JsonToXML from "js2xmlparser";
+
 @Component({ templateUrl: 'reports.component.html' })
 export class ReportsComponent implements OnInit {
 
@@ -24,6 +27,8 @@ export class ReportsComponent implements OnInit {
   report5: any =[];
   report6: any =[];
   report7: any =[];
+  report8: any =[];
+  report9: any =[];
   
   options = [
     {optionid:1, name:'Artistas con más álbumes'},
@@ -33,7 +38,8 @@ export class ReportsComponent implements OnInit {
     {optionid:5, name:'Artistas que han registrado más canciones'},
     {optionid:6, name:'Promedio de duración de canciones por género'},
     {optionid:7, name:'Cantidad de artistas diferentes por playlist'},
-    {optionid:8, name:'Artistas con más diversidad de géneros'}
+    {optionid:8, name:'Artistas con más diversidad de géneros'},
+    {optionid:9, name:'Bitácora'}
   ]
 
 
@@ -118,6 +124,12 @@ export class ReportsComponent implements OnInit {
           break;
         case 8:
           this.appService.downloadFile(data, 'reporte', ['artistid','name','cuenta']);
+          break;
+        case 9:
+          data.forEach(element => {
+            element.rowvalue =''
+          });
+          this.appService.downloadFile(data, 'bitacora', ['operation','rowvalue','stamp', 'accountuser', 'tabla']);
           break;
       }
       

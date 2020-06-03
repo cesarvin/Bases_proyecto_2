@@ -2,18 +2,30 @@
 const getLogin = async (req, res) => {
   try{
     
-    const user = req.body.user;
-    const pass = req.body.pass; 
+    const user = req.body.username;
+    const pass = req.body.password; 
+    console.log(req.body);
     var menu = {};
      
-    const login = await pool.query('SELECT 1 AS Login,  accountid AS accountid \
+    // const login = await pool.query('SELECT 1 AS Login,  accountid AS accountid \
+    //                                    FROM account a \
+    //                                    WHERE a.accountuser = $1 \
+    //                                    AND a.password  =$2 \
+    //                                    LIMIT 1', [user, pass]);
+
+    const login = await pool.query('SELECT 1 AS Login,  accountid AS accountid, \'fake-jwt-token\' AS jwt \
                                        FROM account a \
                                        WHERE a.accountuser = $1 \
                                        AND a.password  =$2 \
                                        LIMIT 1', [user, pass]);
-    //console.log(login);
+
+    console.log(login.rows);
     if (login.rowCount != 0 && login.rows[0].login == 1){
-      menu.login = 1;
+      menu.login = {
+          login: login.rows[0].login,
+          accountid: login.rows[0].accountid,
+          token: login.rows[0].jwt,
+      };
       menu.accountid = login.rows[0].accountid;
       var accountid =  login.rows[0].accountid;
       const getMenu = await pool.query('SELECT  O.*,   \
@@ -230,6 +242,22 @@ const getReport = async (req, res) => {
           INNER JOIN Artist ON Artist.artistid = ListaC.artistid \
       ORDER BY ListaC.Cuenta DESC \
       LIMIT 5;');
+
+      res.json(response.rows);
+    }
+    if (id==9){
+      const response = await pool.query(' \
+      SELECT CASE WHEN a.operation = \'I\' THEN \'INSERT\' \
+          WHEN a.operation = \'U\' THEN \'UPDATE\' \
+          WHEN a.operation = \'D\' THEN \'DELETE\' \
+          ELSE \'\' \
+          END AS operation, \
+        rowvalue, \
+        stamp, \
+        ac.accountuser, \
+        tablename AS tabla \
+      FROM audit a \
+      INNER JOIN account ac ON a.accountid = ac.accountid');
 
       res.json(response.rows);
     }

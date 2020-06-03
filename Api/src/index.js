@@ -1,5 +1,11 @@
 var express = require('express');
+var cors = require('cors');
 var app = express();
+
+
+app.use(cors())
+app.options('*', cors())
+
 
 const { Pool } = require('pg');
 const { config } = require('../src/db.json');
@@ -11,12 +17,12 @@ app.use(express.urlencoded({extended: false}));
 
 app.all('/*', function(request, response, next) {
       response.header("Access-Control-Allow-Origin", "*");
-      response.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS');
+      response.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
       response.header('Access-Control-Allow-Headers', 'Origin, Content-Type, Accept');
       if (request.method == 'OPTIONS') {
             response.status(200).end();
       } else {
-            next();
+            next(); 
       }
 });
 

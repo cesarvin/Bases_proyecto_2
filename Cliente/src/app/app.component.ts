@@ -8,31 +8,32 @@ import './_content/app.less';
 
 @Component({ selector: 'app', templateUrl: 'app.component.html' })
 export class AppComponent {
-    //currentUser: User;
+    currentUser: User;
 
     menuOption:any = {};
     menuexist:boolean=true;
 
     constructor(
         private router: Router,
-        //private authenticationService: AuthenticationService
+        private authenticationService: AuthenticationService
     ) {
-        //this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
+        this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
         
         
     }
-    ngOnInit(): void {
-      //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-      //Add 'implements OnInit' to the class.
-      // this.menuOption = JSON.parse(localStorage.getItem('menu'));
-      //   console.log('this.menuOption', this.menuOption);
-      //   if (typeof(this.menuOption) !== null){
-      //     console.log('holi null->', this.menuOption);
-      //     this.menuexist = false;
-      //   }
-    }
+    // ngOnInit(): void {
+    //   //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+    //   //Add 'implements OnInit' to the class.
+    //   // this.menuOption = JSON.parse(localStorage.getItem('menu'));
+    //   //   console.log('this.menuOption', this.menuOption);
+    //   //   if (typeof(this.menuOption) !== null){
+    //   //     console.log('holi null->', this.menuOption);
+    //   //     this.menuexist = false;
+    //   //   }
+    // }
     logout() {
         localStorage.clear();
+        this.authenticationService.logout();
         this.router.navigate(['/login']);
     }
 }

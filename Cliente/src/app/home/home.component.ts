@@ -1,21 +1,21 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { first } from 'rxjs/operators';
 
-//import { User } from '@/_models';
+import { User } from '@/_models';
 import { UserService, AuthenticationService } from '@/_services';
 
 @Component({ templateUrl: 'home.component.html' })
 export class HomeComponent implements OnInit {
-    ///currentUser: User;
+    currentUser: User;
     users = [];
     menuOption:any = {};
     menuexist:boolean=true;
 
     constructor(
-        //private authenticationService: AuthenticationService,
+        private authenticationService: AuthenticationService,
         private userService: UserService
     ) {
-        //this.currentUser = this.authenticationService.currentUserValue;
+        this.currentUser = this.authenticationService.currentUserValue;
     }
 
     ngOnInit() {

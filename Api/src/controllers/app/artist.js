@@ -47,13 +47,14 @@ const getArtistByAlbumId = async (req, res) => {
 //agrega una Artist o actualiza si existe, y retorna la tupla cuando agrega.
 const setArtist = async (req, res) => {
   try{
-    const { artistid, name } = req.body; 
-
+    const { artistid, name, accountid } = req.body; 
+    console.log( req.body);
     if (artistid){
-      const update = await pool.query('UPDATE Artist SET Name = $2 WHERE ArtistId = $1', [ artistid, name ] );
+      const update = await pool.query('UPDATE Artist SET Name = $2, updAccountId = $3 WHERE ArtistId = $1', [ artistid, name, accountid ] );
       res.json('ok');
     }else {
-      const insert = await pool.query('INSERT INTO Artist (Name) VALUES ($1)', [name] );
+      const insert = await pool.query('INSERT INTO Artist (Name, insAccountId) VALUES ($1, $2)', [name, accountid ] );
+      
       const response = await pool.query('SELECT * FROM Artist WHERE name = $1 ORDER BY artistid, name', [name]);
     
       res.json(response.rows);

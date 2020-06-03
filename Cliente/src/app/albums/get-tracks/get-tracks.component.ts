@@ -59,6 +59,7 @@ export class DialogGetTracksComponent implements OnInit {
                 // this.album.title = data[0].title; 
                 // this.album.artist = data[0].artist;
                 this.loading = false;
+                console.log('this.tracks', this.tracks);
               },
               error => {
                   this.loading = false;
@@ -122,6 +123,39 @@ export class DialogGetTracksComponent implements OnInit {
 
   addTrack(){
     this.router.navigate(['/addtracks',this.album.albumid]);
+  }
+
+  play(track){
+    window.open(track.url, "_blank");
+    this.loading = true;
+      this.albumService.playSong(track.trackid)
+          .pipe(first())
+          .subscribe(
+              data => {
+                
+                this.loading = false;
+              },
+              error => {
+                  this.loading = false;
+              });
+
+  }
+
+  addCart(track){
+    console.log('shop track->',track);
+    this.loading = true;
+      this.albumService.addCart(track.trackid)
+          .pipe(first())
+          .subscribe(
+              data => {
+                
+                this.loading = false;
+                this.getAlbumTracks();
+              },
+              error => {
+                  this.loading = false;
+              });
+
   }
   
 }

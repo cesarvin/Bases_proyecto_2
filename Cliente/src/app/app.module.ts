@@ -23,6 +23,7 @@ import { AccountsComponent } from './cuentas';
 import { RolAccountComponent } from './cuentas/rol-account/rol-cuenta.component';
 import { ActionsComponent } from './actions';
 import { ReportsComponent } from './reports';
+import { CartComponent } from './cart';
 import { LoginComponent } from './login';
 import { RegisterComponent } from './register';
 import { AlertComponent } from './_components';
@@ -56,13 +57,14 @@ import { AppService } from './app.service';
         ReportsComponent,
         LoginComponent,
         RegisterComponent,
-        AlertComponent
+        AlertComponent,
+        CartComponent,
     ],
     //entryComponents: [DialogArtistComponent],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-        AppService
+        AppService,
         // provider used to create fake backend
         //fakeBackendProvider 
     ],
