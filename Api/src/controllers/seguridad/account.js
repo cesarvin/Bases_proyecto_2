@@ -147,6 +147,8 @@ const getAcccounts= async (req, res) => {
   }
 }
 
+
+
 const getReport = async (req, res) => {
   try{
     
@@ -270,9 +272,81 @@ const getReport = async (req, res) => {
   
 }
 
+
+const ventas_por_semana = async (req, res) => {
+  try{
+    
+    const fechai = req.body.fechai;
+    const fechaf = req.body.fechaf; 
+
+    const response = await pool.query('SELECT * FROM ventas_por_semana( $1, $2)',[fechai, fechaf]);
+
+    res.json(response.rows);
+    
+  }catch(e){
+    console.log(e);
+  }
+  
+}
+
+
+const canciones_mas_reproducidas = async (req, res) => {
+  try{
+    
+    const { artistid } = req.body; 
+
+    const response = await pool.query('SELECT nombre, reproducciones FROM canciones_mas_reproducidas('+ artistid +')');
+    console.log(response.rows);
+    res.json(response.rows);
+
+    
+    
+  }catch(e){
+    console.log(e);
+  }
+  
+}
+
+const ventas_por_genero = async (req, res) => {
+  try{
+    
+    const fechai = req.body.fechai;
+    const fechaf = req.body.fechaf; 
+
+    const response = await pool.query('SELECT * FROM ventas_por_genero( $1, $2)',[fechai, fechaf]);
+
+    res.json(response.rows);
+    
+  }catch(e){
+    console.log(e);
+  }
+  
+}
+
+const ventas_por_artista = async (req, res) => {
+  try{
+    
+    const fechai = req.body.fechai;
+    const fechaf = req.body.fechaf;
+    const cant = req.body.cant; 
+
+    const response = await pool.query('SELECT * FROM ventas_por_artista( $1, $2, $3)',[fechai, fechaf, cant]);
+
+    res.json(response.rows);
+    
+  }catch(e){
+    console.log(e);
+  }
+  
+}
+
 module.exports = {
   getLogin,
   getSingin,
   getAcccounts,
-  getReport
+  getReport,
+  ventas_por_semana,
+  canciones_mas_reproducidas,
+  ventas_por_genero,
+  ventas_por_artista
 }

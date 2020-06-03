@@ -51,4 +51,20 @@ export class UserService {
       return this.http.get<any>(`http://localhost:3000/report/${rpt}`);
     }
 
+
+    ventas_por_semana(params) {
+      return this.http.post(`http://localhost:3000/vps`, params);
+     }
+
+     canciones_mas_reproducidas(params) {
+      return this.http.post(`http://localhost:3000/cmr`, params);
+     }
+
+     ventas_por_genero(params) {
+      return this.http.post(`http://localhost:3000/vpg`, params);
+     }
+
+     ventas_por_artista(params) {
+      return this.http.post(`http://localhost:3000/vpa`, params);
+     }
 }

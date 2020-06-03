@@ -3,6 +3,7 @@ import { first } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+import { ArtistService } from '@/_services';
 import { UserService } from '@/_services';
 
 
@@ -19,6 +20,7 @@ export class ReportsComponent implements OnInit {
   menuOption:any = {};
   loading: boolean = false;
   reportdata: any =[];
+  cmr:boolean= false;
   
   report1: any =[];
   report2: any =[];
@@ -29,6 +31,10 @@ export class ReportsComponent implements OnInit {
   report7: any =[];
   report8: any =[];
   report9: any =[];
+
+  artists: any =[];
+  artist: any ={};
+  registerForm: FormGroup;
   
   options = [
     {optionid:1, name:'Artistas con más álbumes'},
@@ -39,7 +45,11 @@ export class ReportsComponent implements OnInit {
     {optionid:6, name:'Promedio de duración de canciones por género'},
     {optionid:7, name:'Cantidad de artistas diferentes por playlist'},
     {optionid:8, name:'Artistas con más diversidad de géneros'},
-    {optionid:9, name:'Bitácora'}
+    {optionid:9, name:'Bitácora'},
+    {optionid:10, name:'Canciones mas reproducidas por artista'},
+    {optionid:11, name:'Ventas por semana'},
+    {optionid:12, name:'Ventas por genero'},
+    {optionid:13, name:'Ventas por artista'}
   ]
 
 
@@ -60,6 +70,7 @@ export class ReportsComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private userService: UserService,
+    private artistService: ArtistService,
     private router: Router,
     private appService:AppService
   ) {
@@ -80,8 +91,10 @@ export class ReportsComponent implements OnInit {
 
     getReport(rpt){
       console.log('menuOption', this.menuOption);
-      
-      if (!this.menuOption.seleccionar) return
+
+      if (!this.menuOption.seleccionar) return;
+      if (rpt<9) {return} else {this.reportdata = null};
+
       this.loading = true;
         this.userService.getReport(rpt)
             .pipe(first())
@@ -131,10 +144,50 @@ export class ReportsComponent implements OnInit {
           });
           this.appService.downloadFile(data, 'bitacora', ['operation','rowvalue','stamp', 'accountuser', 'tabla']);
           break;
+        case 10:
+            this.appService.downloadFile(data, 'reporte', ['nombre','reproducciones']);
+            break;
       }
       
     }
 
-    
 
+    otro(){
+      console.log('buscar');
+      this.getArtistsByName();
+    }
+
+    getArtistsByName(){
+      this.loading = true;
+        this.artistService.getArtistsByName(this.artist.name)
+            .pipe(first())
+            .subscribe(
+               
+                data => {
+                  this.artists = data;
+                  this.loading = false;
+                },
+                error => {
+                    this.loading = false;
+                });
+    }
+    
+    canciones_mas_reproducidas(artist){
+      this.loading = true;
+      console.log(artist);
+      this.userService.canciones_mas_reproducidas({artistid:artist.artistid})
+          .pipe(first())
+          .subscribe(
+              data => {
+                console.log(data);
+                this.reportdata = data;
+                this.loading = false;
+                this.cmr = true;
+                console.log('this.reportdata ',this.reportdata );
+              },
+              error => {
+                this.reportdata =null;
+                  this.loading = false;
+              });
+    }
 }

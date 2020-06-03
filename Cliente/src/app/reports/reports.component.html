@@ -254,3 +254,60 @@
     </tbody>
   </table>
 </div>
+
+<div *ngIf="rpt == 10">
+  <div>
+    <form>
+      <div class="form-group">
+          <label for="artistName">Nombre</label>
+          <input type="text" name="something" [(ngModel)]="artist.name" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.artistName.errors }" />
+      </div>
+      <div class="form-group">
+          <button  class="btn btn-primary" (click)="otro()">Buscar</button>
+    </div>
+    </form>
+  </div>
+  <div>
+    <table class="table">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">Artista</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let artist of artists">
+          <td scope="row">{{artist.name}}</td>
+          <td ><input type="button" value="Ver reporte" class="btn btn-primary btn-sm" (click)="canciones_mas_reproducidas(artist)"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div *ngIf="cmr">
+      <table class="table" *ngIf="cmr">
+      <thead class="thead-light">
+        <tr>
+          <th colspan="3">
+            <button [disabled]="loading" class="btn btn-primary" (click)="exportReport(reportdata,rpt)">
+              <!-- <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span> -->
+              Exportar Reporte
+            </button>
+          </th>
+        </tr>
+        <tr>
+          <th scope="col">nombre</th>
+          <th scope="col">reproducciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let dato of reportdata">
+          <td scope="row">{{dato.nombre}}</td>
+          <td scope="row">{{dato.reproducciones}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  
+  
+</div>
