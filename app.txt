@@ -1,0 +1,18 @@
+- Instalar node, instalar angular cli
+
+Ejecutar el script que esta en la carpeta DB en postgres
+
+En la ventana de comandos:
+
+- En la carpeta de Api instalar los modulos
+	npm install 
+
+- En la carpeta de Cliente instalar los modulos
+	npm install
+
+- en la carpeta api levantar el servicio api rest 
+	node /.src/index.js 
+
+- en otra terminar, en la carpeta de cliente, compilar angular
+	npm start
+
