@@ -16108,6 +16108,12 @@ AS
 SELECT t.trackid, t.insaccountid
 FROM track t;
 
+CREATE VIEW mytracks 
+AS 
+SELECT accountid, trackid FROM BuyedTracks
+UNION
+SELECT insaccountid AS accountid, trackid  FROM TrackByUserInsert;
+
 DROP TABLE IF EXISTS TrackPlayed; 
 CREATE TABLE TrackPlayed (
     AccountId INT NOT NULL REFERENCES Account ON DELETE CASCADE ON UPDATE CASCADE,
@@ -16162,4 +16168,97 @@ BEGIN
 	   	
 		RETURN passed;
 END;
-$$  LANGUAGE plpgsql
+$$  LANGUAGE plpgsql;
+
+
+
+CREATE OR REPLACE FUNCTION canciones_mas_reproducidas ( partist int) 
+	RETURNS TABLE (
+	nombre varchar(50), 
+	reproducciones bigint
+)
+AS $$
+BEGIN
+	
+	--regresa resultados
+	RETURN QUERY SELECT tk."name", count (tk.*)
+				FROM ((trackplayed tp INNER JOIN track tk ON tp.trackid = tk.trackid) INNER JOIN album al ON al.albumid = tk.albumid) INNER JOIN artist ar ON ar.artistid = al.artistid
+				WHERE ar.artistid = partist
+				GROUP BY tk."name"
+				ORDER BY count (tk.*) DESC
+				LIMIT 6;
+
+END; $$ 
+
+LANGUAGE 'plpgsql';
+
+
+CREATE OR REPLACE FUNCTION ventas_por_semana ( pfechai TIMESTAMP, pfechaf TIMESTAMP) 
+	RETURNS TABLE (
+	semana INT, 
+	total_ventas bigint
+)
+AS $$
+BEGIN
+	
+	--regresa resultados
+	RETURN QUERY SELECT CAST(EXTRACT(WEEK FROM inv.invoicedate) AS INT) as semana, count(EXTRACT(WEEK FROM inv.invoicedate)) as total_ventas
+				FROM invoice inv
+				WHERE inv.invoicedate < pfechaf AND inv.invoicedate >= pfechai
+				GROUP BY EXTRACT(WEEK FROM inv.invoicedate)
+				ORDER BY EXTRACT(WEEK FROM inv.invoicedate) ASC;
+
+END; $$ 
+
+LANGUAGE 'plpgsql';
+
+
+CREATE OR REPLACE FUNCTION ventas_por_genero ( pfechai TIMESTAMP, pfechaf TIMESTAMP) 
+	RETURNS TABLE (
+	genero varchar(50), 
+	total_ventas bigint
+)
+AS $$
+BEGIN
+	
+	--regresa resultados
+	RETURN QUERY SELECT gen.name, count(gen.genreid) as total_ventas
+				FROM ((genre gen INNER JOIN track tk ON gen.genreid = tk.genreid) INNER JOIN invoiceline inl ON inl.trackid = tk.trackid) INNER JOIN invoice inv ON inv.invoiceid = inl.invoiceid 
+				WHERE inv.invoicedate < pfechaf AND inv.invoicedate >= pfechai 
+				GROUP BY gen.genreid
+				ORDER BY count(gen.genreid) DESC;
+
+END; $$ 
+
+LANGUAGE 'plpgsql';
+
+CREATE OR REPLACE FUNCTION ventas_por_artista ( pfechai TIMESTAMP, pfechaf TIMESTAMP, pn int ) 
+	RETURNS TABLE (
+	artista varchar(50), 
+	total_ventas bigint
+)
+AS $$
+BEGIN
+	
+	--regresa resultados
+	RETURN QUERY SELECT ar.name AS artista, count(ar.artistid) as total_ventas
+				FROM (((artist ar INNER JOIN album al ON ar.artistid = al.artistid) INNER JOIN track tk ON al.albumid = tk.albumid) INNER JOIN invoiceline inl ON inl.trackid = tk.trackid) INNER JOIN invoice inv ON inv.invoiceid = inl.invoiceid 
+				WHERE inv.invoicedate < pfechaf AND inv.invoicedate >= pfechai 
+				GROUP BY ar.artistid
+				ORDER BY count(ar.artistid) DESC
+				LIMIT pn;
+
+END; $$ 
+
+LANGUAGE 'plpgsql';
+
+
+--SELECT * FROM ventas_por_semana( '2009-01-01 00:00:00', '2009-06-15 00:00:00')
+
+--SELECT * FROM canciones_mas_reproducidas(3)
+
+--SELECT * FROM ventas_por_genero( '2009-01-01 00:00:00', '2009-05-15 00:00:00')
+
+--SELECT * FROM ventas_por_artista( '2009-01-01 00:00:00', '2009-05-15 00:00:00', 10)
+
+
