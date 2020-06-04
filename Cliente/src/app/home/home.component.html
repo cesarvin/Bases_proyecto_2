@@ -1,1 +1,39 @@
-﻿<h1>Spotifake</h1>
+﻿<h1>Spotifake My songs</h1>
+
+<div>
+    <form>
+      <div class="form-group">
+          <label for="trackName">Buscar canción:</label>
+          <input type="text" name="something" [(ngModel)]="trackname" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.trackName.errors }" />
+      </div>
+      <div class="form-group">
+          <button  class="btn btn-primary" (click)="getMyTrack()">Buscar Cancion</button>
+    </div>
+    </form>
+  </div>
+  <div>
+    <table class="table">
+        <thead class="thead-light">
+          <tr>
+            <th scope="col">Nombre</th>
+            <th scope="col">Album</th>
+            <th scope="col">Artista</th>
+            <th scope="col">Genero</th> 
+            <th scope="col">Duración</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let track of tracks">
+            <td scope="row">{{track.name}}</td>
+            <td scope="row">{{track.title}}</td>
+            <td scope="row">{{track.artist}}</td>
+            <td scope="row">{{track.genre}}</td>
+            <td scope="row">{{track.duration / 60000 | number:'1.0-2'}}min</td>
+            <td><button type="button" class="btn btn-primary btn-sm btn-success" (click)="play(track)"><i class="fa fa-play"></i></button></td>
+          </tr>
+        </tbody>
+    </table>
+
+  </div>
+  

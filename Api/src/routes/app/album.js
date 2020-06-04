@@ -1,7 +1,7 @@
 const { Router } = require('express'); 
 const router = Router(); 
 
-const { getAlbum, setAlbum, delAlbum , getAlbumByArtist, getAlbumById, getAlbumTracks, playSong, addCart, getCart, soldcart} = require('../../controllers/app/album');
+const { getAlbum, setAlbum, delAlbum , getAlbumByArtist, getAlbumById, getAlbumTracks, playSong, addCart, getCart, soldcart,getMyTracks,getMyTrack} = require('../../controllers/app/album');
 
 //consulta
 router.get('/album', getAlbum);
@@ -14,6 +14,8 @@ router.post('/play', playSong);
 router.post('/addcart', addCart);
 router.get('/shopcart/:accountid', getCart);
 router.get('/sold/:accountid', soldcart);
+router.get('/mytracks/:accountid',getMyTracks);
+router.post('/mytrack', getMyTrack);
 
 //ingresa
 router.post('/album', setAlbum);

@@ -188,6 +188,42 @@ const soldcart = async (req, res) => {
   }
 }
 
+const getMyTracks = async (req, res) => {
+  try{
+    
+    const accountid = req.params.accountid;
+    if (accountid){
+      const response = await pool.query('SELECT tba.* \
+                                          FROM mytracks mt \
+                                            INNER JOIN TrackByAlbum tba ON (mt.trackid = tba.trackid) \
+                                          WHERE accountid = $1',[accountid]);
+      res.json(response.rows);
+    }
+
+  }catch(e){
+    console.log(e);
+  }
+}
+
+const getMyTrack = async (req, res) => {
+  try{
+    
+    const { track, accountid } = req.body; 
+
+    if (accountid){
+      const response = await pool.query('SELECT tba.* \
+                                          FROM mytracks mt \
+                                            INNER JOIN TrackByAlbum tba ON (mt.trackid = tba.trackid) \
+                                          WHERE accountid =' + accountid+ ' AND upper(tba.name) like \'%'+ track.toUpperCase() + '%\'');
+      res.json(response.rows);
+    }
+
+    
+  }catch(e){
+    console.log(e);
+  }
+}
+
 module.exports = {
   getAlbum,
   getAlbumByArtist,
@@ -198,5 +234,7 @@ module.exports = {
   playSong,
   addCart,
   getCart,
-  soldcart
+  soldcart,
+  getMyTracks,
+  getMyTrack
 }

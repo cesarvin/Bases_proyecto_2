@@ -59,4 +59,12 @@ export class AlbumService {
   getSoldCart(){
     return this.http.get<any>(`http://localhost:3000/sold/${this.accountid}`);
   }
+
+  getMyTracks(){
+    return this.http.get<any>(`http://localhost:3000/mytracks/${this.accountid}`);
+  }
+
+  getMyTrack(track) {
+    return this.http.post('http://localhost:3000/mytrack', {track:track, accountid:this.accountid});
+  }
 }
